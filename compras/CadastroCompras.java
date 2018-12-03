@@ -1,7 +1,5 @@
 package compras;
-import produto.Produto;
-import compras.RepositorioComprasArray;
-import compras.RepositorioComprasInterface;
+import produtos.Produto;
 
 public class CadastroCompras {
 	private RepositorioComprasInterface compras;
@@ -18,11 +16,11 @@ public class CadastroCompras {
 		this.compras.adicionarItem(produto);
 	}
 	
-	public void removerItem(String nome) throws ItemNaoEstaNoCarrinhoException {
+	public void removerItem(String nome) throws ExceptionItemNaoEstaNoCarrinho {
 		this.compras.removerItem(nome);
 	}
 	
-	public Produto procurarItem(String nome) throws ItemNaoEstaNoCarrinhoException {
+	public Produto procurarItem(String nome) throws ExceptionItemNaoEstaNoCarrinho {
 		return this.compras.procurarItem(nome);
 	}
 	

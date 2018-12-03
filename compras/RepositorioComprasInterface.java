@@ -1,14 +1,14 @@
 package compras;
 
-import produto.Produto;
+import produtos.produto.*;
 
 public interface RepositorioComprasInterface {
 
-	void adicionarItem(Produto produto);
+	void inserir(Produto produto) throws ExceptionLimiteAtingidoCompras;
 
-	void removerItem(String nome) throws ItemNaoEstaNoCarrinhoException;
+	void remover(String nome) throws ExceptionItemNaoEstaNoCarrinho;
 
-	Produto procurarItem(String nome) throws ItemNaoEstaNoCarrinhoException;
+	Produto procurar(String nome) throws ExceptionItemNaoEstaNoCarrinho;
 
 	boolean existe(String nome);
 

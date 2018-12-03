@@ -1,6 +1,6 @@
 package compras;
 
-import produto.Produto;
+import produtos.Produto;
 
 import java.util.Random;
 

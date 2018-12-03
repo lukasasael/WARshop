@@ -1,50 +1,60 @@
 package compras;
 
-import produto.Produto;
+import produtos.arma.Arma;
+import produtos.produto.*;
+
 import java.util.Random;
-import armas.Armas;
 
 public class RepositorioComprasArray implements RepositorioComprasInterface {
 	private Produto[] arrayCarrinho = new Produto[1000]; // Compras de Acessórios
-	private int[] arrayQtdProduto = new int[arrayCarrinho.length]; // Armazenar qtd do produto por índice
-	private Armas[] arrayCarinho2 = new Armas[1000]; // Compras de Armas
 
 	// Adicionar Item no Carrinho
-	public void adicionarItem(Produto produto) {
+	public void inserir(Produto produto) throws ExceptionLimiteAtingidoCompras {
 		for (int i = 0; i < arrayCarrinho.length; i++) {
-			if (this.arrayCarrinho[i].getNome().equals(produto)) {
-				this.arrayQtdProduto[i] += 1; // Este código adiciona qtd no índice do produto
-			} else {
-				this.arrayCarrinho[i] = produto;
-				this.arrayQtdProduto[i] = 1; // Este código adiciona qtd no índice do produto
+			if (arrayCarrinho[i].getNome() == produto.getNome()) {
+				this.arrayCarrinho[i].setQuantidade(arrayCarrinho[i].getQuantidade() + produto.getQuantidade());
+			} else if (arrayCarrinho[i] == null) {
+				this.arrayCarrinho[i].setQuantidade(produto.getQuantidade());
+				break;
+			} else if (i == arrayCarrinho.length) {
+				if (arrayCarrinho[i] == null) {
+					this.arrayCarrinho[i] = produto;
+					this.arrayCarrinho[i].setQuantidade(1);
+					break;
+				} else {
+					throw new ExceptionLimiteAtingidoCompras();
+				}
 			}
 		}
 	}
 
 	// Remover Item do Carrinho
 	@Override
-	public void removerItem(String nome) throws ItemNaoEstaNoCarrinhoException {
-		for (int i = 0; i < this.arrayCarrinho.length; i++) {
-			if (this.arrayCarrinho[i].getNome().equals(nome)) {
-				int aux = i;
-				for (int j = 1; j < (this.arrayCarrinho.length - aux); j++) {
-					this.arrayCarrinho[aux] = this.arrayCarrinho[aux + 1];
-					aux++;
+	public void remover(String nome) throws ExceptionItemNaoEstaNoCarrinho {
+		for (int i = 0; i < arrayCarrinho.length; i++) {
+			if (arrayCarrinho[i].getNome().equals(nome)) {
+				int posicaoEncontrada = i;
+				for (int j = posicaoEncontrada; j < arrayCarrinho.length; j++) {
+					if ((arrayCarrinho[j] != null) && (arrayCarrinho[j].getQuantidade() > 1) && arrayCarrinho[j].getNome().equals(nome)) {
+						arrayCarrinho[j].setQuantidade(arrayCarrinho[j].getQuantidade()-1);
+					} else if((arrayCarrinho[j] != null) && (arrayCarrinho[j].getQuantidade() == 1)){
+						arrayCarrinho[j] = arrayCarrinho[j+1];
+					}
 				}
-			} else {
-				throw new ItemNaoEstaNoCarrinhoException();
+			} else if (arrayCarrinho[i] == null) {
+				throw new ExceptionItemNaoEstaNoCarrinho();
 			}
 		}
 	}
 
 	// Procurar Item no Carrinho
 	@Override
-	public Produto procurarItem(String nome) throws ItemNaoEstaNoCarrinhoException {
+	public Produto procurar(String nome) throws ExceptionItemNaoEstaNoCarrinho {
 		for (int i = 0; i < this.arrayCarrinho.length; i++) {
 			if (this.arrayCarrinho[i].getNome().equals(nome)) {
 				return this.arrayCarrinho[i];
 			} else {
-				throw new ItemNaoEstaNoCarrinhoException();
+				throw new ExceptionItemNaoEstaNoCarrinho();
 			}
 		}
 		return null;
@@ -59,15 +69,15 @@ public class RepositorioComprasArray implements RepositorioComprasInterface {
 			} else if (this.arrayCarrinho[i] == null) {
 				return false;
 			}
-		}
-		return false;
+		}return false;
 	}
 
 	// Adicionar algum cupom de Desconto
 	@Override
 	public int inserirCupom(int codCupom) {
-		return codCupom;
-
+		Random geradorDesconto = new Random();
+		int valorDesconto = geradorDesconto.nextInt(5);
+		return valorDesconto;
 	}
 
 	// Calcular Frete de envio
